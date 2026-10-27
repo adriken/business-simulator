@@ -2,7 +2,7 @@
 
 A general-purpose Monte Carlo business simulator. Describe any business as building blocks, give every uncertain number as a range, and the engine plays out thousands of possible futures to show the odds: typical profit, how bad a bad year gets, the chance of a loss, when cash could run out, and which assumptions matter most.
 
-**Live app:** _link added after deployment_
+**Live app:** [business-simulator.streamlit.app](https://business-simulator.streamlit.app)
 
 ## Why
 
