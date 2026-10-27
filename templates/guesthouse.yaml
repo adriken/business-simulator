@@ -1,0 +1,47 @@
+# Small guesthouse: 8 rooms, monthly view of one year.
+# Every number can be fixed (4500), a range [low, high], or [low, likely, high].
+# Example figures for illustration, not real hotel data.
+
+name: Small guesthouse
+period: month
+horizon: 12
+currency: KES
+starting_cash: 250000
+
+capacity:
+  room_nights: 240            # 8 rooms x 30 nights
+
+streams:
+  - name: rooms
+    demand: [70, 130, 200]    # room-nights guests want per month, before seasonality
+    price: [3500, 4500, 5500] # KES per night
+    capacity: room_nights
+    loss: [0.02, 0.04, 0.08]  # no-shows and cancellations
+    #            Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+    seasonality: [1.2, 0.8, 0.8, 0.9, 1.0, 0.9, 1.1, 1.3, 1.0, 0.9, 1.0, 1.4]
+
+costs:
+  fixed:
+    - {name: staff, amount: [120000, 135000, 150000]}
+    - {name: rent_and_loan, amount: [150000, 165000, 180000]}
+    - {name: utilities, amount: [25000, 32000, 40000]}
+  per_unit:
+    - {name: breakfast_and_amenities, stream: rooms, basis: sold, amount: [600, 750, 900]}
+  one_off:
+    - {name: repainting, period: 3, amount: [40000, 50000, 60000]}
+
+plans:
+  - name: Raise price 10%
+    description: Room rate up 10%; some guests go elsewhere.
+    changes:
+      - {path: streams.rooms.price, op: multiply, value: 1.10}
+      - {path: streams.rooms.demand, op: multiply, value: [0.85, 0.92, 0.98]}
+
+  - name: Add 2 rooms
+    description: Convert storage into 2 rooms. Needs one more staff member.
+    changes:
+      - {path: capacity.room_nights, op: add, value: 60}
+      - {path: costs.fixed.staff, op: add, value: [20000, 25000, 30000]}
+    extra_costs:
+      one_off:
+        - {name: room_conversion, period: 1, amount: [150000, 200000, 260000]}
